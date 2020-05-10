@@ -12,7 +12,15 @@ def Refresh_AWSFiles(lottoType):
                 curResultList = str(body).split("\r\n")
                 # print(curResultList)
                 # print(len(curResultList))
+
                 # curResultList.pop(len(curResultList))  # Remove the last one as it's empty string
+                for row in curResultList:
+                        if row == "":
+                                curResultList.remove(row)
+
+                # print(len(curResultList))
+                # print(curResultList)
+
                 if len(curResultList)>1:
                         curResultRows=[]
 
@@ -26,42 +34,43 @@ def Refresh_AWSFiles(lottoType):
                         if lottoType == "OnKeno":
                                 LottoNum=20
                         # print("LottoNum:" + str(LottoNum))
-                        # print(curResultList[1:])
+                        # print(curResultList[1:-1])
 
                         for row in curResultList[1:] :
-                                # create new row as a list
-                                newResult = []
-                                Items = row.split(",")
-                                # print(Items)
-                                # print(len(Items))
-                                newResult.append(Items[0])  # PlayDate
-                                # print("PlayDate: " + Items[0])
+                                if row != "":
+                                        # create new row as a list
+                                        newResult = []
+                                        Items = row.split(",")
+                                        # print(Items)
+                                        # print(len(Items))
+                                        newResult.append(Items[0])  # PlayDate
+                                        # print("PlayDate: " + Items[0])
 
-                                i = 1
-                                if lottoType == "OnKeno":
-                                        newResult.append(int(Items[i]))  # AP
-                                        i = i + 1
+                                        i = 1
+                                        if lottoType == "OnKeno":
+                                                newResult.append(Items[i])  # AP
+                                                i = i + 1
 
-                                numBegin = i
-                                while i < numBegin + LottoNum:
-                                        newResult.append(int(Items[i]))
-                                        # print("Nums: " + Items[i])
-                                        i = i + 1
+                                        numBegin = i
+                                        while i < numBegin + LottoNum:
+                                                newResult.append(int(Items[i]))
+                                                # print("Nums: " + Items[i])
+                                                i = i + 1
 
-                                if lottoType in ["Lotto649", "LottoMax", "DailyGrand", "Lottario", "On49"]: # Bonus
-                                        newResult.append(int(Items[i]))
-                                        # print("i=" + str(i) +" Bonus: " + Items[i])
-                                        i = i + 1
+                                        if lottoType in ["Lotto649", "LottoMax", "DailyGrand", "Lottario", "On49"]: # Bonus
+                                                newResult.append(int(Items[i]))
+                                                print("i=" + str(i) +" Bonus: " + Items[i])
+                                                i = i + 1
 
-                                if lottoType in ["Lotto649", "LottoMax", "Lottario"]: # Jackpot
-                                        newResult.append(Items[i])
-                                        i = i + 1
+                                        if lottoType in ["Lotto649", "LottoMax", "Lottario"]: # Jackpot
+                                                newResult.append(Items[i])
+                                                i = i + 1
 
-                                if lottoType =="LottoMax":  # Million Draws
-                                        newResult.append(int(Items[i]))
-                                        i = i + 1
-                                # print(newResult)
-                                curResultRows.insert(0, newResult)
+                                        if lottoType =="LottoMax":  # Million Draws
+                                                newResult.append(int(Items[i]))
+                                                i = i + 1
+                                        # print(newResult)
+                                        curResultRows.insert(0, newResult)
 
                         # write to database
                         if lottoType in ["Lotto649", "Lottario"]:
@@ -122,7 +131,7 @@ def Refresh_AWSFiles(lottoType):
 
 # Refresh_AWSFiles("Lotto649")
 # Refresh_AWSFiles("LottoMax")
-Refresh_AWSFiles("DailyGrand")
+# Refresh_AWSFiles("DailyGrand")
 # Refresh_AWSFiles("Lottario")
 # Refresh_AWSFiles("On49")
 # Refresh_AWSFiles("OnKeno")
